@@ -1,16 +1,7 @@
 <img src="./imgs/zelros.svg" width="250">
 
-Todo: Bien distinguer le quoi et le comment dans chacun des parties.
-
-Add definition like Stateless from Octo (https://blog.octo.com/strategie-d-architecture-api/)
-
 
 # API-first Guide
-
-Expliquer que ce guide se focalise sur l'aspect extérieur de l'API (comment elle se comporte).
-Nous ne détaillons la construction interne de l'API, qui fera l'objet d'un autre guide.
-
-
 
 At Zelros,
 
@@ -23,6 +14,8 @@ At Zelros,
 [700: An API is secure](./api700_security.md)<br/>
 [800: An API is scalable](./api800_scalability.md)<br/>
 [900: An API is versioned](./api900_versioning.md)<br/>
+
+This [checklist](./checklist.md) can be applied to validate API compliance
 
 ![Toc schema](./imgs/toc_schema.svg)
 
