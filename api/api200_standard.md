@@ -223,6 +223,29 @@ age=24
 ```
 
 
+#### 221.5: Manage Versioning in the Accepts Header
+
+In the request, provide the version specification in the header. A template can be:
+
+```
+Accept: application/vnd.<company>.<apiname>.json;version=<num>
+```
+
+If the version is not specified, always use the latest version.
+
+&#9989; Good way:
+```
+GET /customers/{customer_id}
+Accept: application/vnd.zelros.prevoyance.json;version=1
+```
+
+&#10060; Bad way:
+```
+GET /v1/customers/{customer_id}
+GET customers/{customer_id}?apiversion=v1
+```
+
+
 ### 222: Responses
 
 #### 222.1: Identify ressources with UUID
@@ -361,30 +384,7 @@ makes inconsistencies between different actions and endpoints more likely.
 
 ### 223: Misc
 
-#### 223.1: Manage Versioning in the Accepts Header
-
-In the request, provide the version specification in the header. A template can be:
-
-```
-Accept: application/vnd.<company>.<apiname>.json;version=<num>
-```
-
-If the version is not specified, always use the latest version.
-
-&#9989; Good way:
-```
-GET /customers/{customer_id}
-Accept: application/vnd.zelros.prevoyance.json;version=1
-```
-
-&#10060; Bad way:
-```
-GET /v1/customers/{customer_id}
-GET customers/{customer_id}?apiversion=v1
-```
-
-
-#### 223.2: Provide Request-Id and Session-Id for Introspection
+#### 223.1: Provide Request-Id and Session-Id for Introspection
 
 For each API response, include a `Request-Id` header, populated with a UUID value.
 By logging this ID on the client, server and any backing services, it provides a mechanism to trace, diagnose and debug request scope.
