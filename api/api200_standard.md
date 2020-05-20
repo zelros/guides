@@ -58,20 +58,20 @@ GET https://api.fakecompany.com/swagger.json
 
 For end-to-end tests, the client SDK is dynamically generated. The [swagger-codegen](https://github.com/swagger-api/swagger-codegen) tool helps to generate a skeleton.
 
-It avoids inconsistency between routes and the definition file (do not use direct HTTP call).
+It avoids inconsistency between endpoints and the definition file (do not use direct HTTP call).
 
 
 ## 220: Fit to the basics
 
 ### 221: Requests
 
-#### 221.1 Routes follow the business
+#### 221.1 Endpoints follow the business
 
 ##### Business Design
 
-To build endpoints and routes, follow this way:
-1. Routes fit to the business case.
-2. Datamodel fits to the routes.
+To build endpoints, follow this way:
+1. Endpoints fit to the business case.
+2. Datamodel fits to the endpoints.
 3. Software architecture fits to the datamodel.
 
 A customer chooses a product:
@@ -178,9 +178,9 @@ HTTP request methods are not limited to GET or POST. There is a lot of [useful v
 | DELETE | Remove a ressource<br>Unsubscribe from a ressource|
 
 
-#### 221.3: Action = Route + Verb
+#### 221.3: Endpoint = Verb + Route
 
-An action is a combination of a **route** and a **verb**.
+An Endpoint (or an action) is a combination of a **verb** and a **route**.
 
 Options like filtering, pagination, formating are set in _query string_.
 
@@ -404,7 +404,7 @@ Request-Id: 2d3b68e5-b46c-404e-8011-81f3e668a44f
 ```
 
 
-## 230: Usual routes
+## 230: Usual endpoints
 
 ### 231: Search ressources
 
@@ -556,7 +556,7 @@ and return a **200** status code.
 POST /customers/{customer_id}/send_invoice
 ```
 
-Each operation has a dedicated route.
+Each operation has a dedicated endpoint.
 
 Do not use an [action pattern](https://en.wikipedia.org/wiki/Command_pattern):
 
