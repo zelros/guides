@@ -90,6 +90,37 @@ The buckets definition shall be configured to fit the service response times
 Use the prometheus client library to implement your metrics [Prometheus Client library](https://prometheus.io/docs/instrumenting/clientlibs/)
 Several examples can be found in the codebase of Zelros for nodejs, Flask or Tornado servers.
 
+## Setting the SLOs, building the SLIs
+
+As we've already said, SLOs define the minimum requirements to be available from a client's perspective. The main goal of monitoring is to build and watch the SLIs so we are able to compare them with the SLOs in order to know if we are compliant. Let's see how we should build them.
+
+- Error Rate
+This one is pretty straightforward as the name is already meaningful. You may want to ensure that your servers are healthy and, even if they are effectively responding to your requests, that they don't return 500 http status codes (that's why mastering http status codes is really important when you're API first). Indeed, you're servers might be up, might respond super fast, but might be crashing or failing internally.
+The Error Rate SLI is built by taking the 500 status codes responses and dividing it by the total number of responses, during a short time period, like 5 or 10 minutes. The Error Rate SLO is tipically set between 1% and 5%.
+
+- Latency
+Latency SLI and SLO are tricky. You don't want your service to take too much time to answer a request, but you don't want to set a time limit for **all** your requests because, sometimes, some requests will take longer than expected but won't be noticed by the user.
+So now you might be thinking about an average response time, but that might not work because, depending on the nature of each of your services, they would take different average response times and you would end up with an unmeaningful, hard to deal with, global average response time SLI. Setting the SLO would be even harder.
+A convenient solution is to set a response time limit for a certain percentage of your requests. For instance, you can set a reponse time limit for 90% of your requests (the shortest ones) and keep 10% of limit-free requests (the longest ones). To build the SLI you have to track the 90th percentile of your response times bucket. Classis thresholds are 90, 95 and 99 percentiles.
+
+- Uptime
+Last but not least, you might want to watch your uptime. The SLO is tipically set between 95% and 99% uptime. The SLI is built by computing a ratio of pings failed over the total pings trials. Pings can be live probes or **up** metrics.
+Both SLIs and SLOs are, in our case and at the time this guide is written, recording rules in Prometheus (PrometheusRule with the Prometheus Operator setup). Even if SLOs are static, they will be recorded with the same value at each srape, this might look weird but it is really comfortable when you need those values when building dashboards.
+The way SLIs are computed is likely to be the same for each of your services, whereas SLOs which may differ from each other. As a consequence of that, SLI configuration should be embedded in a common monitoring module while SLOs must be declared and set in an upper layer, like the product charts. SLI expressions are written statically as they are unlikely to change. SLO are written with Helm templating so they are fulfilled when using the common module in a specific product.
+
+```
+# SLO
+- record: error_ratio_slo
+expr: |
+    {{ .Values.slo.error_ratio }}
+# SLI
+- record: http::http_request_duration_seconds_bucket:error_ratio5m
+expr: |
+    sum (
+    http:job_status_code_instance_path:http_request_duration_seconds_bucket:ratio_rate5m
+        {status_code=~"5.."}
+    ) > 0 or vector(0)
+```
 
 ## 410: Test API contract
 
