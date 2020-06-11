@@ -725,8 +725,12 @@ HTTP 500 Server error
 }
 ```
 
+`id` is a key string, which references to your error. An `id` can have different `message` to better describe the error.
+
 Document your error format and the possible error `id`s that clients may
 encounter.
+
+
 
 
 ##### 236.2: Limit error information in production
